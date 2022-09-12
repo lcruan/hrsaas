@@ -1,3 +1,4 @@
+// 存储折叠展开数据
 import Cookies from 'js-cookie'
 
 const state = {

@@ -1,11 +1,15 @@
+<!-- 布局组件 -->
 <template>
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+    <!-- 侧边栏导航(左) -->
     <sidebar class="sidebar-container" />
     <div class="main-container">
+      <!-- 顶部(上) -->
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
       </div>
+      <!-- 主工作区(中) -->
       <app-main />
     </div>
   </div>
