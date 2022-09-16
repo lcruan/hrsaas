@@ -17,12 +17,8 @@ const mutations = {
 const actions = {
   async login(context, data) {
     // 调用api接口
-    const result = await login(data)
-    // axios 默认加了一层data
-    if (result.data.success) {
-      // 如果为true，表示登录成功
-      context.commit('setToken', result.data.data)
-    }
+    const result = await login(data) // 拿到token
+    context.commit('setToken', result) // 设置token
   }
 }
 export default {
