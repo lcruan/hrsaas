@@ -38,6 +38,7 @@
           auto-complete="on"
           @keyup.enter.native="handleLogin"
         />
+        <!-- enter是按键修饰符 native也是修饰符，表示监听组件的原生事件 -->
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
@@ -61,20 +62,12 @@ export default {
   name: 'Login',
   data() {
     const validateMobile = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      // 校验成功 执行 callback()
-      // 校验失败 执行 callback(new Error('错误信息'))
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
+      // if (!validMobile(value)) {
+      //   callback(new Error('手机号格式不正确'))
+      // } else {
+      //   callback()
+      // }∂
+      validMobile(value) ? callback() : callback(new Error('手机号格式不正确'))
     }
     return {
       loginForm: {
@@ -85,9 +78,11 @@ export default {
         // trigger 校验的触发方式 blur/change
         // 自定义函数
         mobile: [{ required: true, trigger: 'blur', message: '手机号不能为空' }, {
-          validator: validateMobile, trigger: 'blur', message: ''
+          validator: validateMobile, trigger: 'blur'
         }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', message: '密码不能为空' }, {
+          trigger: 'blur', min: 6, max: 16, message: '密码长度为6-16位之间'
+        }]
       },
       loading: false,
       passwordType: 'password',
