@@ -31,6 +31,7 @@ router.beforeEach((to, from, next) => {
     } else {
       next('/login')
     }
+    nProgress.done() // 解决手动切换地址时 进度条不关闭问题
   }
 })
 // 导航后置守卫

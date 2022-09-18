@@ -72,7 +72,8 @@ export default {
     }
     return {
       loginForm: {
-        mobile: '13800000002',
+        // mobile: '13800000002',
+        mobile: '13800000001',
         password: '123456'
       },
       loginRules: {
@@ -125,7 +126,7 @@ export default {
           } catch (error) {
             console.log(error)
           } finally {
-            // 不论执行try 还是 catch 都会执行this.loading = false
+            // 不论执行try 还是 catch 都会关闭转圈
             this.loading = false
           }
         }
