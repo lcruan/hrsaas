@@ -3,7 +3,7 @@ import axios from 'axios'
 import router from '@/router'
 import { Message } from 'element-ui'
 import { getTimeStamp } from '@/utils/auth'
-const TimeOut = 2000 // 定义超时时间 1小时
+const TimeOut = 3600 // 定义超时时间 1小时
 
 // 当我们执行npm run dev 读取.env.development文件的内容 => /api => 触发代理 npm run build 走的生产
 // process.env.VUE_APP_BASE_API这个值随着我们执行命令来改变
@@ -46,7 +46,14 @@ service.interceptors.response.use(response => {
     return Promise.reject(new Error(message))
   }
 }, error => {
-  Message.error(error.message) // 提示错误信息
+  // error 信息 里面 response的对象
+  if (error.response && error.response.data && error.response.data.code === 10002) {
+    // 当等于10002 表示后端告诉我token超时了
+    store.dispatch('user/logout') // 登出action 删除token
+    router.push('/login')
+  } else {
+    Message.error(error.message) // 提示错误信息
+  }
   return Promise.reject(error) // 返回执行错误 让当前的执行链调出成功 直接进入 catch
 })
 // 是否超时
