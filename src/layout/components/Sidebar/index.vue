@@ -12,7 +12,8 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
+        <!-- [Vue warn]: Duplicate keys detected: '/permission' This may cause an update error 报错 将key值从 route.path 改为route.index -->
+        <sidebar-item v-for="route in routes" :key="route.index" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
   </div>
