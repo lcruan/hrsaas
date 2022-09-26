@@ -11,6 +11,7 @@
       <!-- <el-button slot="after" type="primary">导入excel</el-button> -->
       <template v-slot:after>
         <el-button type="primary">导入excel</el-button>
+        <upload-excel />
       </template>
 
     </page-tools>
