@@ -19,7 +19,7 @@
       <el-form-item label="部门" prop="departmentName">
         <el-input v-model="formData.departmentName" style="width:50%" placeholder="请选择部门" @focus="getDepartments" />
         <!-- 放置一个树形组件 -->
-        <el-tree :data="treeData" />
+        <el-tree v-if="showTree" v-loading="loading" :data="treeData" :props="{label: 'name'}" :default-expand-all="true" />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
         <el-date-picker v-model="formData.correctionTime" style="width:50%" placeholder="请选择转正时间" />
@@ -69,14 +69,19 @@ export default {
         departmentName: [{ required: true, message: '部门不能为空', trigger: 'change' }],
         timeOfEntry: [{ required: true, message: '入职时间', trigger: 'blur' }]
       },
-      treeData: [] // 定义一个数组来接收树形结构
+      treeData: [], // 定义一个数组来接收树形结构
+      showTree: false, // 默认不显示树形组件
+      loading: false // 加上一个进度条
     }
   },
   methods: {
     async getDepartments() {
+      this.showTree = true
+      this.loading = true
       const { depts } = await getDepartments()
       //   depts是一个数组 需要转换成树形结构 才可以被 el-tree显示
       this.treeData = tranListToTreeData(depts, '')
+      this.loading = false
     }
   }
 }
