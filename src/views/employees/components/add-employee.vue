@@ -1,6 +1,6 @@
 <template>
-  <el-dialog :visible="showDialog" title="新增员工">
-    <el-form :model="formData" :rules="rules" label-width="120px">
+  <el-dialog :visible="showDialog" title="新增员工" @close="btnCancel">
+    <el-form ref="addEmployee" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="姓名" prop="username">
         <el-input v-model="formData.username" style="width:50%" placeholder="请输入姓名" />
       </el-form-item>
@@ -11,7 +11,9 @@
         <el-date-picker v-model="formData.timeOfEntry" style="width:50%" placeholder="请选择入职时间" />
       </el-form-item>
       <el-form-item label="聘用形式" prop="formOfEmployment">
-        <el-select v-model="formData.formOfEmployment" style="width:50%" placeholder="请选择" />
+        <el-select v-model="formData.formOfEmployment" style="width:50%" placeholder="请选择">
+          <el-option v-for="item in EmployeeEnum.hireType" :key="item.id" :label="item.value" :value="item.id" />
+        </el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
         <el-input v-model="formData.workNumber" style="width:50%" placeholder="请输入工号" />
@@ -19,7 +21,14 @@
       <el-form-item label="部门" prop="departmentName">
         <el-input v-model="formData.departmentName" style="width:50%" placeholder="请选择部门" @focus="getDepartments" />
         <!-- 放置一个树形组件 -->
-        <el-tree v-if="showTree" v-loading="loading" :data="treeData" :props="{label: 'name'}" :default-expand-all="true" />
+        <el-tree
+          v-if="showTree"
+          v-loading="loading"
+          :data="treeData"
+          :props="{label: 'name'}"
+          :default-expand-all="true"
+          @node-click="selectNode"
+        />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
         <el-date-picker v-model="formData.correctionTime" style="width:50%" placeholder="请选择转正时间" />
@@ -28,8 +37,8 @@
     <!-- footer插槽 -->
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
-        <el-button size="small">取消</el-button>
-        <el-button size="small" type="primary">确定</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
+        <el-button size="small" type="primary" @click="btnOK">确定</el-button>
       </el-col>
     </el-row>
   </el-dialog>
@@ -37,6 +46,8 @@
 <script>
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils'
+import EmployeeEnum from '@/api/constant/employees'
+import { addEmployee } from '@/api/employees'
 export default {
   props: {
     showDialog: {
@@ -46,6 +57,7 @@ export default {
   },
   data() {
     return {
+      EmployeeEnum,
       // 定义表单数据
       formData: {
         username: '',
@@ -82,6 +94,40 @@ export default {
       //   depts是一个数组 需要转换成树形结构 才可以被 el-tree显示
       this.treeData = tranListToTreeData(depts, '')
       this.loading = false
+    },
+    selectNode(node) {
+      this.formData.departmentName = node.name
+      this.showTree = false
+    },
+    async btnOK() {
+      try {
+      // 校验表单
+        await this.$refs.addEmployee.validate()
+        // 检验成功
+        await addEmployee(this.formData) // 调用新增接口
+        // 通知父组件 更新数据
+        // this.$parent 父组件的实例
+        this.$parent.getEmployeeList && this.$parent.getEmployeeList() // 直接调用父组件的更新方法
+        this.$parent.showDialog = false
+        // 这里不用写重置数据 因为 关闭弹层触发了close事件 close事件绑定了btnCancel方法
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    btnCancel() {
+      this.formData = {
+        username: '',
+        mobile: '',
+        formOfEmployment: '',
+        workNumber: '',
+        departmentName: '',
+        timeOfEntry: '',
+        correctionTime: ''
+      }
+      this.$refs.addEmployee.resetFields()
+      // this.$parent.showDialog = false
+      this.$emit('update:showDialog', false)
+      // update:props名称 这么写的话 可以在父组件 直接用sync 修饰符处理
     }
   }
 }
