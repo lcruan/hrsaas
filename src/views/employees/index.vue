@@ -65,6 +65,7 @@
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees' // 引入员工的枚举对象
 import AddEmployee from './components/add-employee'
+import { formatDate } from '@/filters'
 export default {
   components: {
     AddEmployee
@@ -155,6 +156,14 @@ export default {
         // Object.keys(headers) ['手机号', '姓名', '入职日期']
         return Object.keys(headers).map(key => {
           // headers[key] 是所对应的英文名 -> mobile
+          // 需要判断 字段
+          if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
+            // 格式化日期
+            return formatDate(item[headers[key]])
+          } else if (headers[key] === 'formOfEmployment') {
+            const obj = EmployeeEnum.hireType.find(item => item.id === item[headers[key]])
+            return obj ? obj.value : '未知'
+          }
           return item[headers[key]] // ['132','张三','','']
         })
       })
