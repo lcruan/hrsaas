@@ -35,7 +35,7 @@
         <el-table-column align="center" label="操作" sortable="" fixed="right" width="280">
           <!-- <template slot-scope="{ row }"> -->
           <template v-slot="{ row }">
-            <el-button type="text" size="small">查看</el-button>
+            <el-button type="text" size="small" @click="$router.push(`/employees/detail/${row.id}`)">查看</el-button>
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
@@ -116,8 +116,8 @@ export default {
     },
     exportData() {
       const headers = {
-        '手机号': 'mobile',
         '姓名': 'username',
+        '手机号': 'mobile',
         '入职日期': 'timeOfEntry',
         '聘用形式': 'formOfEmployment',
         '转正日期': 'correctionTime',
@@ -133,9 +133,14 @@ export default {
         // 获取员工接口 页码 每页条数 100
         const { rows } = await getEmployeeList({ page: 1, size: this.page.total })
         const data = this.formatJson(headers, rows) // 返回的data就是导出的结构
+        const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']]
+        const merges = ['A1:A2', 'B1:F1', 'G1:G2']
         excel.export_json_to_excel({
           header: Object.keys(headers),
-          data
+          data,
+          filename: '员工资料表',
+          multiHeader, // 复杂表头
+          merges // 合并选项
         })
 
         // excel.export_json_to_excel({
@@ -161,7 +166,7 @@ export default {
             // 格式化日期
             return formatDate(item[headers[key]])
           } else if (headers[key] === 'formOfEmployment') {
-            const obj = EmployeeEnum.hireType.find(item => item.id === item[headers[key]])
+            const obj = EmployeeEnum.hireType.find(obj => obj.id === item[headers[key]])
             return obj ? obj.value : '未知'
           }
           return item[headers[key]] // ['132','张三','','']
