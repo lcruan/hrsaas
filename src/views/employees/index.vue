@@ -18,6 +18,7 @@
       <el-table v-loading="loading" border :data="list">
         <el-table-column align="center" type="index" label="序号" sortable="" width="120" />
         <el-table-column align="center" prop="username" label="姓名" sortable="" />
+        <el-table-column align="center" prop="mobile" label="手机号" sortable="" />
         <el-table-column align="center" prop="workNumber" label="工号" sortable="" />
         <el-table-column align="center" prop="formOfEmployment" label="聘用形式" :formatter="formatEmployment" sortable="" />
         <el-table-column align="center" prop="departmentName" label="部门" sortable="" />
