@@ -11,7 +11,7 @@
                 <el-input v-model="userInfo.username" style="width:300px;" />
               </el-form-item>
               <el-form-item label="密码" prop="password">
-                <el-input v-model="userInfo.password" style="width:300px;" type="password" />
+                <el-input v-model="userInfo.password2" style="width:300px;" type="password" />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="saveUser">保存</el-button>
@@ -20,9 +20,16 @@
           </el-tab-pane>
           <el-tab-pane label="个人详情">
             <!-- 放置内容 -->
+            <!-- <user-info /> -->
+            <!-- vuejs中内置了 一个组件 component   直接写<component/>标签-->
+            <!-- 动态组件 作用是：可以切换组件 -->
+            <!-- <el-button type="primary" @click="UserComponent = 'el-table'">切换组件</el-button>
+            <el-button type="primary" @click="UserComponent = 'UserInfo'">切换组件1</el-button> -->
+            <component :is="UserComponent" />
           </el-tab-pane>
           <el-tab-pane label="岗位信息">
             <!-- 放置内容 -->
+            <component :is="JobComponent" />
           </el-tab-pane>
         </el-tabs>
       </el-card>
@@ -33,9 +40,17 @@
 <script>
 import { getUserDetailById } from '@/api/user'
 import { saveUserDetailById } from '@/api/employees'
+import UserInfo from './components/user-info'
+import JobInfo from './components/job-info.vue'
 export default {
+  components: {
+    UserInfo,
+    JobInfo
+  },
   data() {
     return {
+      UserComponent: 'UserInfo',
+      JobComponent: 'job-info',
       userId: this.$route.params.id, // 直接将路由中的参数赋值给data中的属性
       userInfo: {
         username: '',
