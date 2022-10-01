@@ -17,6 +17,7 @@
     >
       <i class="el-icon-plus" />
     </el-upload>
+    <el-progress v-if="showPercent" style="width:180px;" :percentage="percent" />
     <el-dialog :visible.sync="showDialog" title="图片预览">
       <img :src="imgUrl" alt="" style="width:100%">
     </el-dialog>
@@ -38,7 +39,9 @@ export default {
       fileList: [],
       showDialog: false,
       imgUrl: '',
-      currentFileUid: null // 记录当前正在上传的uid
+      currentFileUid: null, // 记录当前正在上传的uid
+      percent: 0, // 当前的百分比
+      showPercent: false
     }
   },
   computed: {
@@ -89,6 +92,7 @@ export default {
       }
       //   已经确定当前上传的就是当前的这个file了
       this.currentFileUid = file.uid
+      this.showPercent = true
       return true // 最后一定要return true
     },
     upload(params) {
@@ -101,6 +105,9 @@ export default {
           Region: 'ap-nanjing', // 地域
           Key: params.file.name, // 文件名
           Body: params.file, // 要上传的文件对象
+          onProgress: (params) => {
+            this.percent = params.percent * 100
+          },
           StorageClass: 'STANDARD' // 上传的模式类型 直接默认 标准模式即可
         }, (err, data) => {
           // data返回数据之后，应该如何处理？
@@ -121,6 +128,12 @@ export default {
               }
               return item
             })
+            // 关闭进度条
+            // 重置百分比
+            setTimeout(() => {
+              this.showPercent = false
+              this.percent = 0
+            }, 1000)
             // 将上传成功的地址 回写 到了 fileList中 fileList变化 =》 upload组件 就会根据fileList的变化而去渲染视图
           }
         })
