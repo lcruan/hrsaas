@@ -72,9 +72,7 @@ export const constantRoutes = [
       path: '', // 二级路由path什么都不写 表示二级默认路由
       component: () => import('@/views/import')
     }]
-  },
-  // 当地址匹配不到 进到这里 跳到404页面
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 // 定义一个动态路由变量
 // 这里导出这个变量 后面做权限的时候会用到
@@ -99,9 +97,10 @@ const createRouter = () => new Router({
 const router = createRouter() // 实例化一个路由
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+// 重置路由，只要登出就把路由重置为最初状态
 export function resetRouter() {
   const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  router.matcher = newRouter.matcher // matcher就是路由表的数据
 }
 
 export default router
