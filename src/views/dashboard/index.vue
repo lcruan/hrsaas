@@ -14,6 +14,9 @@ export default {
     ...mapGetters([
       'name'
     ])
+  },
+  created() {
+    this.test()
   }
 }
 </script>
