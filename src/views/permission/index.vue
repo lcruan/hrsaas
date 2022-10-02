@@ -21,10 +21,38 @@
             <el-button type="text">编辑</el-button>
             <el-button type="text">删除</el-button>
           </template>
-
         </el-table-column>
       </el-table>
     </div>
+    <!-- 新增编辑弹层 -->
+    <el-dialog :visible="showDialog" title="新增/编辑">
+      <el-form label-width="120px">
+        <el-form-item label="名称">
+          <el-input v-model="formData.name" style="width:90%" />
+        </el-form-item>
+        <el-form-item label="标识">
+          <el-input v-model="formData.code" style="width:90%" />
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="formData.description" style="width:90%" />
+        </el-form-item>
+        <el-form-item label="开启">
+          <!-- 当值为0时 不激活 -->
+          <el-switch
+            v-model="formData.enVisible"
+            inactive-value="0"
+            active-value="1"
+          />
+        </el-form-item>
+      </el-form>
+      <!-- 底部确定与取消 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" size="small">确定</el-button>
+          <el-button size="small">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -34,7 +62,16 @@ import { tranListToTreeData } from '@/utils'
 export default {
   data() {
     return {
-      list: []
+      list: [],
+      showDialog: true,
+      formData: {
+        name: '', // 名称
+        code: '', // 标识
+        description: '', // 描述
+        type: '', // 类型 该类型 不需要显示 因为点击添加的时候已经知道类型了
+        pid: '', // 因为做的是树 需要知道添加到哪个节点下了
+        enVisible: '0' // 开启
+      }
     }
   },
   created() {
