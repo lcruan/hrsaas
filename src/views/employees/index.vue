@@ -18,6 +18,14 @@
       <el-table v-loading="loading" border :data="list">
         <el-table-column align="center" type="index" label="序号" sortable="" width="120" />
         <el-table-column align="center" prop="username" label="姓名" sortable="" />
+        <el-table-column width="120px" label="头像" align="center">
+          <!-- 插槽 -->
+          <!-- <template slot-scope="{row}">
+          </template> -->
+          <template v-slot="{row}">
+            <img v-imagerror="require('@/assets/common/head.jpg')" :src="row.staffPhoto" style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"></img>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="mobile" label="手机号" sortable="" />
         <el-table-column align="center" prop="workNumber" label="工号" sortable="" />
         <el-table-column align="center" prop="formOfEmployment" label="聘用形式" :formatter="formatEmployment" sortable="" />
