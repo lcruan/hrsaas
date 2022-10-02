@@ -23,7 +23,12 @@
           <!-- <template slot-scope="{row}">
           </template> -->
           <template v-slot="{row}">
-            <img v-imagerror="require('@/assets/common/head.jpg')" :src="row.staffPhoto" style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"></img>
+            <img
+              v-imagerror="require('@/assets/common/head.jpg')"
+              :src="row.staffPhoto"
+              style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"
+              @click="showQrCode(row.staffPhoto)"
+            >
           </template>
         </el-table-column>
         <el-table-column align="center" prop="mobile" label="手机号" sortable="" />
@@ -67,6 +72,12 @@
     <!-- 放置组件弹窗 -->
     <!-- sync修饰符 子组件 去改变父组件的数据的一个语法糖-->
     <add-employee :show-dialog.sync="showDialog" />
+    <!-- 以为本身数据在data中 加一个sync -->
+    <el-dialog title="二维码" :visible.sync="showCodeDialog">
+      <el-row type="flex" justify="center">
+        <canvas ref="myCanvas" />
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -75,6 +86,7 @@ import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees' // 引入员工的枚举对象
 import AddEmployee from './components/add-employee'
 import { formatDate } from '@/filters'
+import QrCode from 'qrcode'
 export default {
   components: {
     AddEmployee
@@ -88,7 +100,8 @@ export default {
         total: 0
       },
       loading: false,
-      showDialog: false // 默认是关闭的
+      showDialog: false, // 默认是关闭的
+      showCodeDialog: false // 显示二维码弹层
     }
   },
   created() {
@@ -182,6 +195,20 @@ export default {
         })
       })
       // return rows.map(item => Object.keys(headers).map(key => item[headers[key]]))
+    },
+    showQrCode(url) {
+      // url存在的情况下 才弹出层
+      if (url) {
+        this.showCodeDialog = true // 数据更新了， 但是我的弹层会立刻出现吗？ 页面的渲染是异步的
+        // 有一个方法 可以在上一次数据更新完毕 页面渲染完毕之后
+        this.$nextTick(() => {
+          // 此时可以确定已经有ref
+          QrCode.toCanvas(this.$refs.myCanvas, url) // 将地址转换为二维码
+          // 如果转换的二维码后面信息 是一个地址的话 就会跳转到该地址 如果不是地址就会显示内容
+        })
+      } else {
+        this.$message.warning('该用户还未上传头像')
+      }
     }
   }
 }
