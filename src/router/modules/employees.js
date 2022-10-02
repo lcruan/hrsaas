@@ -18,11 +18,19 @@ export default {
       }
     },
     {
-      path: 'detail/:id?', // 动态路由参数 /employees/detail/123  问号的含义表示该参数可传可不传
+      path: 'detail/:id', // 动态路由参数 /employees/detail/123  问号的含义表示该参数可传可不传
       component: () => import('@/views/employees/detail'),
       hidden: true, // hiden为true表示该内容不在左侧菜单显示
       meta: {
         title: '员工详情'
+      }
+    },
+    {
+      path: 'print/:id',
+      component: () => import('@/views/employees/print'),
+      hidden: true,
+      meta: {
+        title: '员工打印'
       }
     }
   ]
