@@ -27,10 +27,22 @@ router.beforeEach(async(to, from, next) => {
       // 如果当前vuex中有用户的资料的id 表示 已经有资料了 不需要获取了 如果没有id才需要获取
       if (!store.getters.userId) {
         // 如果没有id才表示当前用户资料没有获取过
-        await store.dispatch('user/getUserInfo')
+        // async 函数所return的内容 用await就可以接收到
+        const { roles } = await store.dispatch('user/getUserInfo')
         // 如果说后续 需要根据用户资料获取数据的话 这里必须改成 同步
+        // 筛选用户的可用路由
+        const routes = await store.dispatch('permission/filterRoutes', roles.menus) // 筛选得到当前用户可用的路由
+        // routes就是筛选得到的动态路由
+        // 动态路由 添加到 路由表中 默认路由表 只有静态路由没有动态路由
+        // addRoutes 必须 用 next(地址) 不能用next()
+        router.addRoutes(routes) // 添加动态路由 到路由表
+        console.log(routes)
+        // 添加完动态路由之后
+        next(to.path) // 相当于跳到对应的地址 相当于多做一次跳转 为什么要多做一次跳转
+        // 进门了 但是进门之后要去的地方的路还没有铺好，直接走 则掉坑里 多做一次跳转，再从门往里进一次，跳转之前 把路铺好，再进来的时候，路就铺好了
+      } else {
+        next()
       }
-      next()
     }
   } else {
     // 没有token

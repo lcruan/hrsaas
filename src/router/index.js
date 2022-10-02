@@ -38,6 +38,7 @@ import Layout from '@/layout'
  * constantRoutes
  * a base page that does not have permission requirements
  * all roles can be accessed
+ * 静态路由 路由表
  */
 export const constantRoutes = [
   {
@@ -91,7 +92,7 @@ export const asyncRoutes = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...asyncRoutes] // 静态路由和动态路由的临时合并
+  routes: [...constantRoutes] // 静态路由和动态路由的临时合并
   // routes: constantRoutes
 })
 

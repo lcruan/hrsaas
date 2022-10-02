@@ -1,13 +1,13 @@
 import Layout from '@/layout'
 export default {
   // 路由规则
-  path: '/permission',
-  name: 'permission',
+  path: '/salarys',
+  name: 'salarys',
   component: Layout,
   children: [
     {
       path: '',
-      component: () => import('@/views/permission'),
+      component: () => import('@/views/salarys'),
       meta: {
         title: '工资',
         icon: 'money'

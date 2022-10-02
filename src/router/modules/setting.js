@@ -2,7 +2,7 @@ import Layout from '@/layout'
 export default {
   // 路由规则
   path: '/setting',
-  name: 'setting',
+  name: 'settings',
   component: Layout,
   children: [
     {
