@@ -101,8 +101,8 @@ export default {
         // 执行上传操作
         cos.putObject({
           // 上传到腾讯与 =》 哪个地域的储存桶 文件 格式 名称 回调
-          Bucket: 'hrsaas-1256834103', // 存储桶名称
-          Region: 'ap-nanjing', // 地域
+          Bucket: '', // 存储桶名称
+          Region: '', // 地域
           Key: params.file.name, // 文件名
           Body: params.file, // 要上传的文件对象
           onProgress: (params) => {
