@@ -8,6 +8,8 @@
       <!-- 顶部(上) -->
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
+        <!-- 放置多页签组件 -->
+        <tags-view />
       </div>
       <!-- 主工作区(中) -->
       <app-main />
