@@ -1,17 +1,37 @@
+
 import Layout from '@/layout'
-export default {
-  // 路由规则
+
+const attendRouter = {
   path: '/attendances',
-  name: 'attendances',
   component: Layout,
+  name: 'attendances',
   children: [
     {
       path: '',
       component: () => import('@/views/attendances'),
+      name: 'attendances',
       meta: {
         title: '考勤',
-        icon: 'skill'
+        icon: 'excel' }
+    },
+    {
+      path: 'archiving',
+      component: () => import('@/views/attendances/historical'),
+      name: 'archiving',
+      hidden: true,
+      meta: {
+        title: '归档'
+      }
+    },
+    {
+      path: 'report/:month',
+      component: () => import('@/views/attendances/report'),
+      name: 'reports',
+      hidden: true,
+      meta: {
+        title: '报表'
       }
     }
   ]
 }
+export default attendRouter
